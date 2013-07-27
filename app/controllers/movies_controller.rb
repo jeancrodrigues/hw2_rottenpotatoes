@@ -7,7 +7,12 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+#    flash[:notice] = 'params ' + params.to_s
+    if params.has_key? :order
+      @movies = Movie.order(params[:order] + ' ASC')
+    else
+      @movies = Movie.all
+    end
   end
 
   def new
