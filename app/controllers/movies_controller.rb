@@ -7,9 +7,11 @@ class MoviesController < ApplicationController
   end
 
   def index
-#    flash[:notice] = 'params ' + params.to_s
+    @classes = {}
     if params.has_key? :order
       @movies = Movie.order(params[:order] + ' ASC')
+      @item =  params[:order] + "_header"
+      @classes[@item.to_sym]="hilite"
     else
       @movies = Movie.all
     end
