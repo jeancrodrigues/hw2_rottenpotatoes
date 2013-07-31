@@ -8,6 +8,7 @@ class MoviesController < ApplicationController
 
   def index
     @classes = {}
+    @all_ratings = Movie.ratings 
     if params.has_key? :order
       @movies = Movie.order(params[:order] + ' ASC')
       @item =  params[:order] + "_header"
