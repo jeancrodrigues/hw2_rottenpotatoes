@@ -10,14 +10,25 @@ class MoviesController < ApplicationController
     @classes = {}
     @all_ratings = Movie.ratings 
     
-    params["ratings"] = Hash[@all_ratings.map{|i| [i , 1]}] unless params.has_key? "ratings"
+    if !params.has_key? "ratings" 
+      if session.has_key?"ratings"
+        params["ratings"] = session["ratings"] 
+        flash.keep
+        redirect_to movies_path( params )
+      else
+        params["ratings"] = Hash[@all_ratings.map{|i| [i,true]}]
+      end
+    else
+      session["ratings"] = params["ratings"]
+    end
     
-    @order = nil
+    @order = session[:order]
 
     if params.has_key? :order
       @item =  params[:order] + "_header"
       @classes[@item.to_sym]="hilite"
       @order = params[:order] + " asc"
+      session[:order]=@order
     end
     
     @movies = Movie.find(:all , :conditions => {:rating=>params[:ratings].keys} , :order => @order)
