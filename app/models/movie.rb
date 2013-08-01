@@ -1,5 +1,10 @@
 class Movie < ActiveRecord::Base
   def self.ratings
-    Movie.select("rating").to_a
+    @ratings = []
+    Movie.select("distinct rating").each do |r|
+      @ratings << r.rating
+    end
+
+    return @ratings
   end
 end

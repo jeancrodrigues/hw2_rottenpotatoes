@@ -9,13 +9,18 @@ class MoviesController < ApplicationController
   def index
     @classes = {}
     @all_ratings = Movie.ratings 
+    
+    params["ratings"] = Hash[@all_ratings.map{|i| [i , 1]}] unless params.has_key? "ratings"
+    
+    @order = nil
+
     if params.has_key? :order
-      @movies = Movie.order(params[:order] + ' ASC')
       @item =  params[:order] + "_header"
       @classes[@item.to_sym]="hilite"
-    else
-      @movies = Movie.all
+      @order = params[:order] + " asc"
     end
+    
+    @movies = Movie.find(:all , :conditions => {:rating=>params[:ratings].keys} , :order => @order)
   end
 
   def new
